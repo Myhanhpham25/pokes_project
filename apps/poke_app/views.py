@@ -9,36 +9,57 @@ from django.db.models import Count
 
 def dashboard(request):
 
-	
+	#The number of times they poked me.	
+	receivedpokes = Poke.objects.filter(pokee = request.session['id'])
+
+	obj = {}
+	for poke in receivedpokes:
+		name = poke.poker.name
+		if name not in obj:
+			obj[name] = 1
+		else: 
+			obj[name] += 1
+	print obj	
+
 	context = {
 
 	'curUser' : User.objects.get(id = request.session['id']),
 	'otherUsers' : User.objects.exclude(id = request.session['id']).order_by(),
-	'pokedMe' : User.objects.get(id = request.session['id']).poked.all().values('poker__name').distinct(),
-	'people' : User.objects.all().values('name').annotate(Count('poked')),
+	'totalCount' : obj,
 
 	}	
-	
-	everyone = User.objects.all()
-
-	me = User.objects.get(id = request.session['id'])
-	
-	pokeePokedMe = context['curUser'].poked.all().values('pokee__id').distinct()
-	# for pokes in pokeePokedMe:
-	# 		context['pokers'].append(User.objects.get(id = pokes('pokee__id')))
-	# I COULDN'T GET IT TO LOOP THROUGH AND PULL NAMES. BUT I THINK MY 'POKEDME' did the job. 
-	# I DIDN'T REALIZED THAT TO ADD COUNT I NEEDED TO DO A FOR LOOP WITH COUNT++
-
 
 	if 'email' not in request.session:
 		return redirect("/")
 	else:
 		return render(request, 'poke_app/dashboard.html', context)
 
-
 def givepoke(request, user_id):
 
 	Poke.objects.create(poker = User.objects.get(id = request.session['id']), pokee = User.objects.get(id = user_id))
 
-
 	return redirect('/poke/dashboard')
+
+
+	#'pokedMe' : User.objects.get(id = request.session['id']).poked.all().values('poker__name').distinct(),
+	# {%for user in pokedMe%}
+	# 	<p>{{user.poker__name}}<p>
+	# 	{%endfor%}	
+
+	# <p> ID of people who poked me</p>
+	# 	{%for user in pokers%}
+	# 	<p>{{user.poker__id}}</p>
+	# 	{%endfor%}
+
+# <p><strong>The number of times they poked me.</strong></p>
+#'pokers2' : receivedpokes,
+# 		{%for poke in pokers2%}
+# 		<p>{{poke.poker.name}}<p>
+# 		{%endfor%}
+
+	#'people' : User.objects.values('name').annotate(Count('poked')), #total count of how many times the user have poked someone
+
+
+
+
+	

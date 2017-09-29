@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>PokeDashboard</title>
-</head>
-<body>
-<a href="/logout"> Logout</a>
-<h1> Welcome, {{request.session.name}}!!!</h1>
-<p> Your user id is : {{request.session.id}}</p>
-<p> You have been poked: {{curUser.poked.all.count}}</p>
+	<head>
+		<title>PokeDashboard</title>
+	</head>
+	<body>
+		<a href="/logout"> Logout</a>
+		<h1> Welcome, {{request.session.name}}!!!</h1>
+		<p> Your user id is : {{request.session.id}}</p>
+		<p>{{curUser.poked.all.count}} people poked you! </p>
 
-<p><strong>People who likes me: </strong></p>
-{%for user in pokedMe%}
-<p>{{user.poker__name}} || how many pokes: <p>
-{%endfor%}
+		<p><strong>These are the people who poked me: </strong></p>
+		{%for key,value in totalCount.items%}
+		<p> {{key}} poked you {{value}} times!</p>
+		{%endfor%}			
 
-<p>Total number of pokes and who got those pokes. {{people}} </p>
+		<p><h3>People who you may want to poke:</h3></p>
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Alias</th>
+					<th>Email</th>
+					<th>History</th>
+					<th>To poke</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>{%for user in otherUsers%}
+					<td>{{user.name}}</td>
+					<td>{{user.alias}}</td>
+					<td>{{user.email}}</td>
+					<td>{{user.poked.all.count}}</td>
+					<td><a href = "/poke/givepoke/{{user.id}}"> Give POKE!</a></td>				
+					</tr>{%endfor%}
+			</tbody>
+		</table>
+	
+	</body>
 
-
-
-<p><h3>People who you may want to poke:</h3></p>
-{%for user in otherUsers%}<p>Name : {{user.name}} || Alias: {{user.alias}} || email: {{user.email}} ||  
-Poke History : {{user.pokers.all.count}} pokes || <a href = "/poke/givepoke/{{user.id}}"> Give a POKE!</a></p>
-
-
-{%endfor%}
-</body>
+	{%for user in people%}
+	<p>{{user.name}} {{user.poked__count}}</p>
+	{%endfor%}
 </html>
 
