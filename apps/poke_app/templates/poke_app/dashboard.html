@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PokeDashboard</title>
+</head>
+<body>
+<a href="/logout"> Logout</a>
+<h1> Welcome, {{request.session.name}}!!!</h1>
+<p> Your user id is : {{request.session.id}}</p>
+<p> You have been poked: {{curUser.poked.all.count}}</p>
+
+<p><strong>People who likes me: </strong></p>
+{%for user in pokedMe%}
+<p>{{user.poker__name}} || how many pokes: <p>
+{%endfor%}
+
+<p>Total number of pokes and who got those pokes. {{people}} </p>
+
+
+
+<p><h3>People who you may want to poke:</h3></p>
+{%for user in otherUsers%}<p>Name : {{user.name}} || Alias: {{user.alias}} || email: {{user.email}} ||  
+Poke History : {{user.pokers.all.count}} pokes || <a href = "/poke/givepoke/{{user.id}}"> Give a POKE!</a></p>
+
+
+{%endfor%}
+</body>
+</html>
+
